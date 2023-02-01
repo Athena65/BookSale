@@ -5,7 +5,7 @@
 <h1 style="color:aqua">Details</h1>
 <div>
     <h4 style="color:red">Book</h4>
-    <hr/>
+    <hr />
     <dl class="row">
         <dt class="col-sm-4">
             @Html.DisplayNameFor(x=>x.Title)<!--Name-->
@@ -32,27 +32,8 @@
             @Html.DisplayFor(x=>x.PublishDate)
         </dd>
     </dl>
-    <table>
-        <thead>
-            <tr>
-                <th>
-                    Authors
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Authors)
-            {
-                <tr>
-                    <td style="color:red">
-                        @Html.DisplayFor(x=>item)
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
 </div>
-<hr/>
+<hr />
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
     <a asp-action="Index">Back To List</a>

@@ -1,42 +1,142 @@
-﻿using BookSale.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using BookSale.Data;
+using BookSale.Models;
+using BookSale.Services;
 
 namespace BookSale.Controllers
 {
-    //Route = controller/action
     public class BooksController : Controller
     {
-        public IActionResult Index()
+        private readonly IBookService _bookService;
+
+        public BooksController(IBookService bookService)
         {
-            return View();
+            _bookService = bookService;
         }
-        public IActionResult Details()
+        public async Task<IActionResult> Index()
         {
-            var book = new Books()
+            return View(await _bookService.GetAllBooks());
+        }
+        public async Task<IActionResult> Details(Guid? id)
+        {
+            try
             {
-                Id = Guid.NewGuid(),
-                Title = "Learn with Athena MVC",
-                Genre = "Programming & Software Development",
-                Price = 55,
-                PublishDate = new System.DateTime(2023,01,31),
-                Authors= new List<string> {"Burak Tamince","Ahmet Kara" }
-            };
-            return View(book);
+                var books = await _bookService.GetBookById(id);
+                return View(books);
+            }
+            catch (Exception ex)
+            {
+                var response = new ServiceResponse();
+                response.Success = false;
+                response.Message = ex.Message;
+                return BadRequest(response);
+            }
         }
-        public IActionResult Create() 
+        public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Books newBook)
+        public async Task<IActionResult> Create([Bind("Id,Title,Genre,Price,PublishDate")] Books books)
         {
-            if(ModelState.IsValid)
+            try
             {
-                //logic to use database
-                return RedirectToAction("Index");   
+                if (ModelState.IsValid)
+                {
+                    await _bookService.CreateBook(books);
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(books);
             }
-            return View(newBook);
+            catch (Exception ex)
+            {
+                var response = new ServiceResponse();
+                response.Success = false;
+                response.Message = ex.Message;
+                return BadRequest(response);
+            }
+
         }
+        public async Task<IActionResult> Edit(Guid? id)
+        {
+            try
+            {
+                var books = await _bookService.GetBookById(id);
+                return View(books);
+            }
+            catch (Exception ex)
+            {
+                var response = new ServiceResponse();
+                response.Success = false;
+                response.Message = ex.Message;
+                return BadRequest(response);
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, Books books)
+        {
+            try
+            {
+                await _bookService.UpdateBook(id, books);
+                if (ModelState.IsValid)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(books);
+            }
+            catch (Exception ex)
+            {
+                var response = new ServiceResponse();
+                response.Success = false;
+                response.Message = ex.Message;
+                return BadRequest(response);
+            }
+        }
+
+        // GET: Books1/Delete/5
+        public async Task<IActionResult> Delete(Guid? id)
+        {
+            try
+            {
+                var books = await _bookService.GetBookById(id);
+                return View(books);
+            }
+            catch (Exception ex)
+            {
+                var response = new ServiceResponse();
+                response.Success = false;
+                response.Message = ex.Message;
+                return BadRequest(response);
+            }
+        }
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            try
+            {
+                await _bookService.DeleteBook(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                var response = new ServiceResponse();
+                response.Success = false;
+                response.Message = ex.Message;
+                return BadRequest(response);
+            }
+
+        }
+
+        private bool BooksExists(Guid id)
+        {
+            return _bookService.BooksExists(id);
+        }
+
+
     }
+
 }
