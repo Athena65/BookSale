@@ -2,7 +2,7 @@
 
 namespace BookSale.Models
 {
-    public class Books
+    public class Book
     {
         public Guid Id { get; set; }
         [Display(Name = "Book Title")]
@@ -14,7 +14,6 @@ namespace BookSale.Models
         [DataType(DataType.Currency)]//also required 
         [Range(1, 100)]
         public double Price { get; set; }
-
         [Display(Name = "Publish Date")] //view display
         [DataType(DataType.Date)]
         public DateTime PublishDate { get; set; }

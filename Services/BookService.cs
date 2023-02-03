@@ -18,7 +18,7 @@ namespace BookSale.Services
             return _context.Books.Any(e => e.Id == id);
         }
 
-        public async Task<Books> CreateBook(Books newBook)
+        public async Task<Book> CreateBook(Book newBook)
         {
             newBook.Id= Guid.NewGuid(); 
             await _context.Books.AddAsync(newBook); 
@@ -26,7 +26,7 @@ namespace BookSale.Services
             return newBook;
         }
 
-        public async Task<Books> DeleteBook(Guid id)
+        public async Task<Book> DeleteBook(Guid id)
         {
            var deleted= await _context.Books.FirstOrDefaultAsync(x=> x.Id==id); 
 
@@ -35,19 +35,19 @@ namespace BookSale.Services
             return deleted;
         }
 
-        public async Task<List<Books>> GetAllBooks()
+        public async Task<List<Book>> GetAllBooks()
         {
             return await _context.Books.ToListAsync();
             
         }
 
-        public async Task<Books> GetBookById(Guid? id)
+        public async Task<Book> GetBookById(Guid? id)
         {
             return await _context.Books.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
 
-        public async Task<Books> UpdateBook(Guid id, Books book)
+        public async Task<Book> UpdateBook(Guid? id, Book book)
         {
             var newBook=await _context.Books.Where(x=>x.Id==id).FirstOrDefaultAsync();  
 

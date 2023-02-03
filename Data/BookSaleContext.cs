@@ -11,14 +11,14 @@ namespace BookSale.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Books>().HasData(new Books
+            modelBuilder.Entity<Book>().HasData(new Book
             {
                 Id=Guid.NewGuid(),
                 Title="NewBook",
                 Genre="Fiction",
                 Price=20,
                 PublishDate=new DateTime(2023,1,24)
-            },new Books
+            },new Book
             {
                 Id = Guid.NewGuid(),
                 Title = "SecondBook",
@@ -28,6 +28,6 @@ namespace BookSale.Data
             });
         }
 
-        public DbSet<Books> Books { get; set; }
+        public DbSet<Book> Books { get; set; }
     }
 }

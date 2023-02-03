@@ -1,53 +1,58 @@
-﻿@model IEnumerable<BookSale.Models.Books>
-
+﻿@model IEnumerable<BookSale.Models.Book>
 @{
     ViewData["Title"] = "Index";
+    Book firstBook = Model.ToList().FirstOrDefault();
 }
-
-<h1>Index</h1>
-
+<h1>Home Page</h1>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New Book</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+               <label asp-for="@firstBook.Id"></label>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genre)
+                <label asp-for="@firstBook.Title"></label>
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
+                        <th>
+               <label asp-for="@firstBook.Genre"></label>
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PublishDate)
+                        <th>
+               <label asp-for="@firstBook.Price"></label>
+            </th>
+                        <th>
+               <label asp-for="@firstBook.PublishDate"></label>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PublishDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <label>@item.Id</label>
+                </td>
+                <td>
+                    <label>@item.Title</label>
+                </td>
+                <td>
+                    <label>@item.Genre</label>
+                </td>
+                <td>
+                    <label>@item.Price</label>
+                </td>
+                <td>
+                    <label>@item.PublishDate</label>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> <!--asp-route-parametername-->
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>  
+        }
     </tbody>
 </table>

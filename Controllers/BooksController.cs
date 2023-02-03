@@ -39,7 +39,7 @@ namespace BookSale.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Genre,Price,PublishDate")] Books books)
+        public async Task<IActionResult> Create([Bind("Id,Title,Genre,Price,PublishDate")] Book books)
         {
             try
             {
@@ -59,24 +59,31 @@ namespace BookSale.Controllers
             }
 
         }
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid? id,Book book)
         {
-            try
+            if (ModelState.IsValid)
             {
-                var books = await _bookService.GetBookById(id);
-                return View(books);
+                try
+                {
+                    await _bookService.UpdateBook(id,book);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!BooksExists(book.Id))
+                    {
+                        var response = new ServiceResponse();
+                        response.Success=false;
+                        response.Message = "Book Doesnt Exist";
+                        return BadRequest(response);
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            catch (Exception ex)
-            {
-                var response = new ServiceResponse();
-                response.Success = false;
-                response.Message = ex.Message;
-                return BadRequest(response);
-            }
+            return View(book);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, Books books)
+        public async Task<IActionResult> Edit(Guid id, Book books)
         {
             try
             {
